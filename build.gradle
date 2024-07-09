@@ -14,7 +14,7 @@ repositories {
 sourceCompatibility = 1.11
 targetCompatibility = 1.11
 
-group = 'io.github.millij'
+group = 'eu.gopacs'
 version = '3.0.0-SNAPSHOT'
 
 
