@@ -3,8 +3,10 @@ package io.github.millij.bean;
 import static io.github.millij.poi.ss.model.DateTimeType.DATE;
 import static io.github.millij.poi.ss.model.DateTimeType.DURATION;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
+import io.github.millij.poi.ss.model.CellType;
 import io.github.millij.poi.ss.model.annotations.Sheet;
 import io.github.millij.poi.ss.model.annotations.SheetColumn;
 
@@ -16,17 +18,20 @@ public class Employee {
     private String id;
     private String name;
 
-    @SheetColumn("Age")
+    @SheetColumn(value = "Age", type = CellType.NUMERIC)
     private Integer age;
 
     @SheetColumn("Gender")
     private String gender;
 
-    @SheetColumn("Height (mts)")
+    @SheetColumn(value = "Height (mts)", type = CellType.NUMERIC)
     private Double height;
 
     @SheetColumn("Address")
     private String address;
+
+    @SheetColumn(value = "Weight (kg)", type = CellType.NUMERIC)
+    private BigDecimal weight;
 
 
     // DateTime fields
@@ -56,6 +61,17 @@ public class Employee {
         this.age = age;
         this.gender = gender;
         this.height = height;
+    }
+
+    public Employee(String id, String name, Integer age, String gender, Double height, BigDecimal weight) {
+        super();
+
+        this.id = id;
+        this.name = name;
+        this.age = age;
+        this.gender = gender;
+        this.height = height;
+        this.weight = weight;
     }
 
 
@@ -136,6 +152,13 @@ public class Employee {
         this.lastSessionDuration = lastSessionDuration;
     }
 
+    public BigDecimal getWeight() {
+        return weight;
+    }
+
+    public void setWeight(BigDecimal weight) {
+        this.weight = weight;
+    }
 
     // Object Methods
     // ------------------------------------------------------------------------

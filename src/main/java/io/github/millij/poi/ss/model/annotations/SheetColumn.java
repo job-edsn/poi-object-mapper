@@ -5,6 +5,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import io.github.millij.poi.ss.model.CellType;
 import io.github.millij.poi.ss.model.DateTimeType;
 
 
@@ -62,5 +63,13 @@ public @interface SheetColumn {
      * @return Order defined by an integer
      */
     int order() default 0;
+
+
+    /**
+     * Specify the column cell type
+     *
+     * @return
+     */
+    CellType type() default CellType.STRING;
 
 }

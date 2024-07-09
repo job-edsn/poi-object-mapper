@@ -12,6 +12,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import io.github.millij.poi.ss.model.CellType;
+import io.github.millij.poi.util.CellData;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -90,15 +92,19 @@ abstract class AbstractSpreadsheetWriter implements SpreadsheetWriter {
             }
 
             // Data Rows
-            final Map<String, List<String>> rowsData = this.prepareSheetRowsData(headers, rowObjects);
+            final Map<String, List<CellData>> rowsData = this.prepareSheetRowsData(headers, rowObjects);
             for (int i = 0, rowNum = 1; i < rowObjects.size(); i++, rowNum++) {
                 final Row row = sheet.createRow(rowNum);
 
                 int cellNo = 0;
                 for (String key : rowsData.keySet()) {
                     Cell cell = row.createCell(cellNo);
-                    String value = rowsData.get(key).get(i);
-                    cell.setCellValue(value);
+                    CellData cellData = rowsData.get(key).get(i);
+                    if(cellData.getCellType() == CellType.NUMERIC) {
+                        cell.setCellValue(((Number)cellData.getValue()).doubleValue());
+                    } else {
+                        cell.setCellValue((String) cellData.getValue());
+                    }
                     cellNo++;
                 }
             }
@@ -131,17 +137,17 @@ abstract class AbstractSpreadsheetWriter implements SpreadsheetWriter {
     // Private Methods
     // ------------------------------------------------------------------------
 
-    private <T> Map<String, List<String>> prepareSheetRowsData(List<String> headers, List<T> rowObjects)
+    private <T> Map<String, List<CellData>> prepareSheetRowsData(List<String> headers, List<T> rowObjects)
             throws Exception {
         // Sheet data
-        final Map<String, List<String>> sheetData = new LinkedHashMap<>();
+        final Map<String, List<CellData>> sheetData = new LinkedHashMap<>();
 
         // Iterate over Objects
         for (final T rowObj : rowObjects) {
-            final Map<String, String> row = Spreadsheet.asRowDataMap(rowObj, headers);
+            final Map<String, CellData> row = Spreadsheet.asRowDataMap(rowObj, headers);
             for (final String header : headers) {
-                final List<String> data = sheetData.getOrDefault(header, new ArrayList<>());
-                final String value = row.getOrDefault(header, "");
+                final List<CellData> data = sheetData.getOrDefault(header, new ArrayList<>());
+                final CellData value = row.getOrDefault(header, new CellData("", CellType.STRING));
 
                 data.add(value);
                 sheetData.put(header, data);

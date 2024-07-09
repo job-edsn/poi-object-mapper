@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import io.github.millij.poi.ss.model.CellType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -157,13 +158,13 @@ public final class Spreadsheet {
     // Read from Bean : as Row Data
     // ------------------------------------------------------------------------
 
-    public static Map<String, String> asRowDataMap(final Object beanObj, final List<String> colHeaders)
+    public static Map<String, CellData> asRowDataMap(final Object beanObj, final List<String> colHeaders)
             throws Exception {
         // Excel Bean Type
         final Class<?> beanType = beanObj.getClass();
 
         // RowData map
-        final Map<String, String> rowDataMap = new HashMap<String, String>();
+        final Map<String, CellData> rowDataMap = new HashMap<>();
 
         // Fields
         for (final Field f : beanType.getDeclaredFields()) {
@@ -179,7 +180,14 @@ public final class Spreadsheet {
                 continue;
             }
 
-            rowDataMap.put(header, Beans.getFieldValueAsString(beanObj, fieldName));
+            Object cellValue;
+            if(sc.type() == CellType.NUMERIC) {
+                cellValue = Beans.getProperty(beanObj, fieldName);
+            } else {
+                cellValue = Beans.getFieldValueAsString(beanObj, fieldName);
+            }
+
+            rowDataMap.put(header, new CellData(cellValue, sc.type()));
         }
 
         // Methods
@@ -196,7 +204,14 @@ public final class Spreadsheet {
                 continue;
             }
 
-            rowDataMap.put(header, Beans.getFieldValueAsString(beanObj, fieldName));
+            Object cellValue;
+            if(sc.type() == CellType.NUMERIC) {
+                cellValue = Beans.getProperty(beanObj, fieldName);
+            } else {
+                cellValue = Beans.getFieldValueAsString(beanObj, fieldName);
+            }
+
+            rowDataMap.put(header, new CellData(cellValue, sc.type()));
         }
 
         return rowDataMap;

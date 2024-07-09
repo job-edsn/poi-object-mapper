@@ -2,6 +2,7 @@ package io.github.millij.poi.ss.writer;
 
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -54,8 +55,8 @@ public class XlsxWriterTest {
 
         // Employees
         List<Employee> employees = new ArrayList<>();
-        employees.add(new Employee("1", "foo", 12, "MALE", 1.68));
-        employees.add(new Employee("2", "bar", null, "MALE", 1.68));
+        employees.add(new Employee("1", "foo", 12, "MALE", 1.68, new BigDecimal("2.010100000000")));
+        employees.add(new Employee("2", "bar", null, "MALE", 1.68, new BigDecimal("5.010100000000")));
         employees.add(new Employee("3", "foo bar", null, null, null));
 
         // Write
